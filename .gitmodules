@@ -1,0 +1,6 @@
+[submodule "pokeapi"]
+	path = pokeapi
+	url = git@github.com:reime005/pokeapi.git
+[submodule "pokerust"]
+	path = pokerust
+	url = https://gitlab.com/lunik1/pokerust.git
