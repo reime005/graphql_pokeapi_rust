@@ -5,7 +5,7 @@ use juniper::{
     ScalarValue,
 };
 
-use pokerust::{Berry, FromId, FromName};
+use pokerust::{Berry, Endpoint, FromId, FromName, Item, List, NamedAPIResourceList};
 
 use super::berry::GraphedBerry;
 
@@ -40,6 +40,12 @@ impl QueryRoot {
         let berry = pokerust::Berry::from_id(id.parse()?)?;
         Ok(GraphedBerry::from(berry))
     }
+
+    // #[graphql(description = "Retrieve a berry information by its id")]
+    // fn list(context: &Context, next: String, offset: String) -> FieldResult<GraphedBerry> {
+    //     let items = pokerust::Item::list(5, 20)?;
+    //     Ok(items)
+    // }
 }
 
 pub struct MutationRoot;

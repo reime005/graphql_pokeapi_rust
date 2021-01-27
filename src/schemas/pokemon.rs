@@ -3,9 +3,11 @@ use juniper::{
   GraphQLInputObject, GraphQLObject, ScalarValue,
 };
 
+use crate::schemas::berry::GraphedBerryFlavor;
 use crate::schemas::contests::GraphedContestType;
-use crate::schemas::generic::{GraphedLanguage, GraphedName};
-use crate::schemas::berry::{GraphedBerryFlavor};
+use crate::schemas::encounters::*;
+use crate::schemas::games::*;
+use crate::schemas::generic::*;
 use crate::schemas::root::Context;
 
 #[derive(GraphQLObject)]
@@ -14,7 +16,7 @@ pub struct GraphedAbility {
   pub id: String,
   pub name: String,
   pub is_main_series: bool,
-  pub generation: GraphedGeneration,
+  // pub generation: GraphedGeneration,
   pub names: Vec<GraphedName>,
   pub effect_entries: Vec<GraphedVerboseEffect>,
   pub effect_changes: Vec<GraphedAbilityEffectChange>,
@@ -26,7 +28,7 @@ pub struct GraphedAbility {
 #[graphql(description = "A humanoid creature in the Star Wars universe")]
 pub struct GraphedAbilityEffectChange {
   pub effect_entries: Vec<GraphedEffect>,
-  pub version_group: GraphedVersionGroup,
+  // pub version_group: GraphedVersionGroup,
 }
 
 #[derive(GraphQLObject)]
@@ -34,7 +36,7 @@ pub struct GraphedAbilityEffectChange {
 pub struct GraphedAbilityFlavorText {
   pub flavor_text: String,
   pub language: GraphedLanguage,
-  pub version_group: GraphedVersionGroup,
+  // pub version_group: GraphedVersionGroup,
 }
 
 #[derive(GraphQLObject)]
@@ -124,7 +126,7 @@ pub struct GraphedNatureStatChange {
 pub struct GraphedMoveBattleStylePreference {
   pub low_hp_preference: String,
   pub high_hp_preference: String,
-  pub move_battle_style: GrapedMoveBattleStyle,
+  // pub move_battle_style: GrapedMoveBattleStyle,
 }
 
 #[derive(GraphQLObject)]
@@ -191,7 +193,7 @@ pub struct GraphedPokemonType {
 #[derive(GraphQLObject)]
 #[graphql(description = "A humanoid creature in the Star Wars universe")]
 pub struct GraphedPokemonHeldItem {
-  pub item: GraphedItem,
+  // pub item: GraphedItem,
   pub version_details: Vec<GraphedPokemonHeldItemVersion>,
 }
 
@@ -206,14 +208,14 @@ pub struct GraphedPokemonHeldItemVersion {
 #[graphql(description = "A humanoid creature in the Star Wars universe")]
 pub struct GraphedPokemonMove {
   // TODO: rename
-  pub move_: GraphedMove,
+  // pub move_: GraphedMove,
   pub version_group_details: Vec<GraphedPokemonMoveVersion>,
 }
 
 #[derive(GraphQLObject)]
 #[graphql(description = "A humanoid creature in the Star Wars universe")]
 pub struct GraphedPokemonMoveVersion {
-  pub move_learn_method: GraphedMoveLearnMethod,
+  // pub move_learn_method: GraphedMoveLearnMethod,
   pub version_group: GraphedVersionGroup,
   pub level_learned_at: String,
 }
@@ -242,7 +244,7 @@ pub struct GraphedPokemonSprites {
 #[derive(GraphQLObject)]
 #[graphql(description = "A humanoid creature in the Star Wars universe")]
 pub struct GraphedLocationAreaEncounter {
-  pub location_area: GraphedLocationArea,
+  // pub location_area: GraphedLocationArea,
   pub version_details: GraphedVersionEncounterDetail,
 }
 
@@ -268,7 +270,7 @@ pub struct GraphedPokemonForm {
   pub form_name: String,
   pub pokemon: GraphedPokemon,
   pub sprites: GraphedPokemonFormSprites,
-  pub version_group: GraphedVersionGroup,
+  // pub version_group: GraphedVersionGroup,
   pub names: Vec<GraphedName>,
   pub form_names: Vec<GraphedName>,
 }
@@ -326,10 +328,10 @@ pub struct GraphedPokemonSpecies {
   pub egg_groups: GraphedEggGroup,
   pub color: GraphedPokemonColor,
   pub shape: GraphedPokemonShape,
-  pub evolves_from_species: Option<GraphedPokemonSpecies>,
-  pub evolution_chain: GraphedEvolutionChain,
+  // pub evolves_from_species: Option<GraphedPokemonSpecies>,
+  // pub evolution_chain: GraphedEvolutionChain,
   pub habitat: Option<GraphedPokemonHabitat>,
-  pub generation: GraphedGeneration,
+  // pub generation: GraphedGeneration,
   pub names: Vec<GraphedName>,
   pub pal_park_encounters: Vec<GraphedPalParkEncounterArea>,
   pub flavor_text_entries: Vec<GraphedFlavorText>,
@@ -349,7 +351,7 @@ pub struct GraphedGenus {
 #[graphql(description = "A humanoid creature in the Star Wars universe")]
 pub struct GraphedPokemonSpeciesDexEntry {
   pub entry_number: String,
-  pub pokedex: GraphedPokedex,
+  // pub pokedex: GraphedPokedex,
 }
 
 #[derive(GraphQLObject)]
@@ -357,7 +359,7 @@ pub struct GraphedPokemonSpeciesDexEntry {
 pub struct GraphedPalParkEncounterArea {
   pub base_score: String,
   pub rate: String,
-  pub area: GraphedPalParkArea,
+  // pub area: GraphedPalParkArea,
 }
 
 #[derive(GraphQLObject)]
@@ -370,14 +372,14 @@ pub struct GraphedPokemonSpeciesVariety {
 #[derive(GraphQLObject)]
 #[graphql(description = "A humanoid creature in the Star Wars universe")]
 pub struct GraphedStat {
-  pub id: i16,
+  pub id: String,
   pub name: String,
-  pub game_index: i16,
+  pub game_index: String,
   pub is_battle_only: bool,
   pub affecting_moves: GraphedMoveStatAffectSets,
   pub affecting_natures: GraphedNatureStatAffectSets,
   pub characteristics: Vec<GraphedCharacteristic>, // incorrectly documented as APIResource
-  pub move_damage_class: Option<GraphedMoveDamageClass>,
+  // pub move_damage_class: Option<GraphedMoveDamageClass>,
   pub names: Vec<GraphedName>,
 }
 
@@ -391,9 +393,9 @@ pub struct GraphedMoveStatAffectSets {
 #[derive(GraphQLObject)]
 #[graphql(description = "A humanoid creature in the Star Wars universe")]
 pub struct GraphedMoveStatAffect {
-  pub change: i8,
+  pub change: String,
   // TODO: rename
-  pub move_: GraphedMove,
+  // pub move_: GraphedMove,
 }
 
 #[derive(GraphQLObject)]

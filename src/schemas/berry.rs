@@ -1,11 +1,11 @@
 // extern crate juniper;
 use pokerust::{
-  Berry, BerryFirmness, BerryFlavor, BerryFlavorMap, FlavorBerryMap, Id, Named, NamedAPIResource,
-  NamedAPIResourceList,
+  Berry, BerryFirmness, BerryFlavor, BerryFlavorMap, FlavorBerryMap, Id, Move, Named,
+  NamedAPIResource, NamedAPIResourceList,
 };
 
 use crate::schemas::contests::GraphedContestType;
-use crate::schemas::generic::GraphedName;
+use crate::schemas::generic::*;
 use crate::schemas::root::Context;
 
 // use juniper::graphql_interface;
@@ -14,52 +14,6 @@ use juniper::{
   graphql_interface, graphql_object, EmptySubscription, FieldResult, GraphQLEnum,
   GraphQLInputObject, GraphQLObject, ScalarValue,
 };
-
-#[graphql_interface]
-trait Node {
-  fn id(&self) -> &str;
-  fn name(&self) -> &str;
-}
-
-#[derive(GraphQLObject)]
-#[graphql(description = "A humanoid creature in the Star Wars universe")]
-pub struct GraphedBerryFirmness {
-  pub id: String,
-  pub name: String,
-  pub berries: Vec<GraphedBerry>,
-  pub names: Vec<GraphedName>,
-}
-
-#[derive(GraphQLObject)]
-#[graphql(description = "A humanoid creature in the Star Wars universe")]
-pub struct GraphedBerryFlavor {
-  pub id: String,
-  pub name: String,
-  pub berries: Vec<GraphedFlavorBerryMap>,
-  pub contest_type: GraphedContestType,
-  pub names: Vec<GraphedName>,
-}
-
-#[derive(GraphQLObject)]
-#[graphql(description = "A humanoid creature in the Star Wars universe")]
-pub struct GraphedContextType {
-  pub name: String,
-  pub url: String,
-}
-
-#[derive(GraphQLObject)]
-#[graphql(description = "A humanoid creature in the Star Wars universe")]
-pub struct GraphedBerryFlavorMap {
-  pub potency: String,
-  pub flavor: GraphedBerryFlavor,
-}
-
-#[derive(GraphQLObject)]
-#[graphql(description = "A humanoid creature in the Star Wars universe")]
-pub struct GraphedFlavorBerryMap {
-  pub potency: String,
-  pub berry: GraphedBerry,
-}
 
 /// Berry
 #[derive(GraphQLObject)]
@@ -74,81 +28,134 @@ pub struct GraphedBerry {
   pub size: String,
   pub smoothness: String,
   pub soil_dryness: String,
-  pub firmness: GraphedBerryFirmness,
+  pub firmness: GraphedNamedAPIResource,
   pub flavors: Vec<GraphedBerryFlavorMap>,
-  // pub item: GraphedItem,
-  pub natural_gift_type: GraphedType,
+  pub item: GraphedNamedAPIResource,
+  pub natural_gift_type: GraphedNamedAPIResource,
 }
 
-impl From<&NamedAPIResource<BerryFirmness>> for GraphedBerryFirmness {
-  fn from(berryFirmness: &NamedAPIResource<BerryFirmness>) -> Self {
-    GraphedBerryFirmness {
-      id: berryFirmness.id().to_string(),
-      name: berryFirmness.name().to_string(),
-      berries: berryFirmness
-        .get()
-        .unwrap()
+#[derive(GraphQLObject)]
+#[graphql(description = "A humanoid creature in the Star Wars universe")]
+pub struct GraphedBerryFlavorMap {
+  pub potency: String,
+  pub flavor: GraphedNamedAPIResource,
+}
+
+#[derive(GraphQLObject)]
+#[graphql(description = "A humanoid creature in the Star Wars universe")]
+pub struct GraphedBerryFirmness {
+  pub id: String,
+  pub name: String,
+  pub berries: Vec<GraphedNamedAPIResource>,
+  pub names: Vec<GraphedName>,
+}
+
+#[derive(GraphQLObject)]
+#[graphql(description = "A humanoid creature in the Star Wars universe")]
+pub struct GraphedBerryFlavor {
+  pub id: String,
+  pub name: String,
+  pub berries: Vec<GraphedFlavorBerryMap>,
+  pub contest_type: GraphedNamedAPIResource,
+  pub names: Vec<GraphedName>,
+}
+
+#[derive(GraphQLObject)]
+#[graphql(description = "A humanoid creature in the Star Wars universe")]
+pub struct GraphedFlavorBerryMap {
+  pub potency: String,
+  pub berry: GraphedNamedAPIResource,
+}
+
+// impl From<&NamedAPIResource<BerryFirmness>> for GraphedBerryFirmness {
+//   fn from(berryFirmness: &NamedAPIResource<BerryFirmness>) -> Self {
+//     GraphedBerryFirmness {
+//       id: berryFirmness.id().to_string(),
+//       name: berryFirmness.name().to_string(),
+//       berries: berryFirmness
+//         .get()
+//         .unwrap()
+//         .berries
+//         .iter()
+//         .map(|b| GraphedBerry::from(&b))
+//         .collect(),
+//       names: berryFirmness
+//         .get()
+//         .unwrap()
+//         .names
+//         .iter()
+//         .map(|&n| GraphedName::from(n))
+//         .collect(),
+//     }
+//   }
+// }
+
+// impl From<&NamedAPIResource<BerryFlavor>> for GraphedBerryFlavor {
+//   fn from(berryFlavor: &NamedAPIResource<BerryFlavor>) -> Self {
+//     GraphedBerryFlavor {
+//       id: berryFlavor.id().to_string(),
+//       name: berryFlavor.name().to_string(),
+//       berries: berryFlavor
+//         .get()
+//         .unwrap()
+//         .berries
+//         .iter()
+//         .map(|b| GraphedBerryFlavorMap::from(&b))
+//         .collect(),
+//       contest_type: berryFlavor.get().unwrap().contest_type,
+//     }
+//   }
+// }
+
+impl From<BerryFlavor> for GraphedBerryFlavor {
+  fn from(berryFlavor: BerryFlavor) -> Self {
+    GraphedBerryFlavor {
+      id: berryFlavor.id.to_string(),
+      name: berryFlavor.name,
+      contest_type: GraphedNamedAPIResource {
+        url: berryFlavor.contest_type.url,
+        name: berryFlavor.contest_type.name,
+      },
+      berries: berryFlavor
         .berries
         .iter()
-        .map(|&b| GraphedBerry::from(b))
+        .map(|b| GraphedFlavorBerryMap::from(b.clone()))
         .collect(),
-      names: berryFirmness
-        .get()
-        .unwrap()
+      names: berryFlavor
         .names
         .iter()
-        .map(|&n| GraphedName::from(n))
+        .map(|b| GraphedName::from(b.clone()))
         .collect(),
     }
   }
 }
 
-impl From<&NamedAPIResource<Berry>> for GraphedBerry {
-  fn from(berryFirmness: &NamedAPIResource<Berry>) -> Self {
-    GraphedBerry {
-      id: berryFirmness.id().to_string(),
-      name: berryFirmness.name().to_string(),
-
-    }
-  }
-}
-
-impl From<&NamedAPIResource<BerryFlavor>> for GraphedBerryFlavor {
-  fn from(berryFlavor: &NamedAPIResource<BerryFlavor>) -> Self {
-    GraphedBerryFlavor {
-      id: berryFlavor.id().to_string(),
-      name: berryFlavor.name().to_string(),
-      berries: berryFlavor
-        .get()
-        .unwrap()
-        .berries
-        .iter()
-        .map(|b| GraphedBerryFlavorMap::from(b))
-        .collect(),
-    }
-  }
-}
-
-impl From<&pokerust::BerryFlavorMap> for GraphedBerryFlavorMap {
-  fn from(berryFlavorMap: &pokerust::BerryFlavorMap) -> Self {
+impl From<BerryFlavorMap> for GraphedBerryFlavorMap {
+  fn from(berryFlavorMap: pokerust::BerryFlavorMap) -> Self {
     GraphedBerryFlavorMap {
       potency: berryFlavorMap.potency.to_string(),
-      flavor: GraphedBerryFlavor::from(&berryFlavorMap.flavor),
+      flavor: GraphedNamedAPIResource {
+        url: berryFlavorMap.flavor.url,
+        name: berryFlavorMap.flavor.name,
+      },
     }
   }
 }
 
-impl From<&pokerust::FlavorBerryMap> for GraphedFlavorBerryMap {
-  fn from(flavorBerryMap: &pokerust::FlavorBerryMap) -> Self {
+impl From<FlavorBerryMap> for GraphedFlavorBerryMap {
+  fn from(flavorBerryMap: FlavorBerryMap) -> Self {
     GraphedFlavorBerryMap {
       potency: flavorBerryMap.potency.to_string(),
-      berry: GraphedBerry::from(flavorBerryMap.berry),
+      berry: GraphedNamedAPIResource {
+        url: flavorBerryMap.berry.url,
+        name: flavorBerryMap.berry.name,
+      },
     }
   }
 }
 
-impl From<pokerust::Berry> for GraphedBerry {
-  fn from(berry: pokerust::Berry) -> Self {
+impl From<Berry> for GraphedBerry {
+  fn from(berry: Berry) -> Self {
     GraphedBerry {
       id: berry.id.to_string(),
       name: berry.name,
@@ -158,18 +165,33 @@ impl From<pokerust::Berry> for GraphedBerry {
       size: berry.size.to_string(),
       smoothness: berry.smoothness.to_string(),
       soil_dryness: berry.soil_dryness.to_string(),
-      firmness: GraphedBerryFirmness::from(&berry.firmness),
+      firmness: GraphedNamedAPIResource {
+        url: berry.firmness.url,
+        name: berry.firmness.name,
+      },
       flavors: berry
         .flavors
         .iter()
         .clone()
-        .map(|b| GraphedBerryFlavorMap::from(b))
+        .map(|b| GraphedBerryFlavorMap::from(b.clone()))
         .collect(),
-      // item: GraphedItem::from(berry.item),
-      // natural_gift_type: GraphedType::from(berry.natural_gift_type)
+      item: GraphedNamedAPIResource {
+        url: berry.item.url,
+        name: berry.item.name,
+      },
+      natural_gift_type: GraphedNamedAPIResource {
+        url: berry.natural_gift_type.url,
+        name: berry.natural_gift_type.name,
+      },
     }
   }
 }
+
+// impl From<&NamedAPIResource<Berry>> for GraphedBerry {
+//   fn from(berryFirmness: &NamedAPIResource<Berry>) -> Self {
+//     GraphedBerry::from(berryFirmness.get().unwrap())
+//   }
+// }
 
 impl GraphedBerryFlavor {}
 impl GraphedBerryFlavorMap {}
