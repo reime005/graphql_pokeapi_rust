@@ -9,7 +9,7 @@ use crate::schemas::generic::*;
 use crate::schemas::root::Context;
 
 #[derive(GraphQLObject)]
-#[graphql(description = "A humanoid creature in the Star Wars universe")]
+#[graphql(description = "TODO")]
 pub struct GraphedVersion {
   pub id: String,
   pub name: String,
@@ -22,7 +22,7 @@ trait Test<Rhs: ?Sized = Self> {
 }
 
 #[derive(GraphQLObject)]
-#[graphql(description = "A humanoid creature in the Star Wars universe")]
+#[graphql(description = "TODO")]
 pub struct GraphedVersionGroup {
   pub id: String,
   pub name: String,

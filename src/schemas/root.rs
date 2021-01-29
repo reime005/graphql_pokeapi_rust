@@ -1,19 +1,27 @@
-// use juniper::{FieldError, FieldResult, RootNode};
-
 use juniper::{
-    graphql_object, EmptySubscription, FieldResult, GraphQLEnum, GraphQLInputObject, GraphQLObject,
-    ScalarValue,
+    graphql_object, EmptyMutation, EmptySubscription, FieldResult, GraphQLEnum, GraphQLInputObject,
+    GraphQLObject, ScalarValue,
 };
 
-use pokerust::{Berry, Endpoint, FromId, FromName, Item, List, NamedAPIResourceList};
+use super::berry::{GraphedBerry, GraphedBerryFlavor};
+use super::pokemon::{GraphedPokemon, GraphedPokemonForm, GraphedPokemonSpecies};
+use super::resource_list::*;
+use pokerust::{
+    Berry, BerryFirmness, BerryFlavor, BerryFlavorMap, Endpoint, FromId, FromName, Item, List,
+    NamedAPIResourceList, Pokemon, PokemonAbility, PokemonForm, PokemonSpecies,
+};
 
-use super::berry::GraphedBerry;
+use std::convert::TryInto;
 
 pub struct Context {}
 
 impl juniper::Context for Context {}
 
 pub struct QueryRoot;
+
+const DEFAULT_OFFSET: i32 = 0;
+const DEFAULT_LIMIT: i32 = 20;
+const VERSION: &str = "0.1";
 
 #[graphql_object(
     // Here we specify the context type for the object.
@@ -23,46 +31,148 @@ pub struct QueryRoot;
 )]
 impl QueryRoot {
     fn apiVersion() -> &str {
-        "1.0"
+        VERSION
+    }
+
+    fn defaultOffset() -> i32 {
+        DEFAULT_OFFSET
+    }
+
+    fn defaultLimit() -> i32 {
+        DEFAULT_LIMIT
+    }
+
+    #[graphql(description = "Retrieve a list of resources")]
+    fn berries(
+        context: &Context,
+        offset: Option<i32>,
+        limit: Option<i32>,
+    ) -> FieldResult<GraphedNamedAPIResourceList> {
+        let objects = Berry::list(
+            offset.unwrap_or(DEFAULT_OFFSET).try_into()?,
+            limit.unwrap_or(DEFAULT_LIMIT).try_into()?,
+        )?;
+        Ok(GraphedNamedAPIResourceList::from(objects))
+    }
+
+    #[graphql(description = "Retrieve a list of resources")]
+    fn berry_firmnesses(
+        context: &Context,
+        offset: Option<i32>,
+        limit: Option<i32>,
+    ) -> FieldResult<GraphedNamedAPIResourceList> {
+        let objects = BerryFirmness::list(
+            offset.unwrap_or(DEFAULT_OFFSET).try_into()?,
+            limit.unwrap_or(DEFAULT_LIMIT).try_into()?,
+        )?;
+        Ok(GraphedNamedAPIResourceList::from(objects))
+    }
+
+    #[graphql(description = "Retrieve a list of resources")]
+    fn berry_flavors(
+        context: &Context,
+        offset: Option<i32>,
+        limit: Option<i32>,
+    ) -> FieldResult<GraphedNamedAPIResourceList> {
+        let objects = BerryFlavor::list(
+            offset.unwrap_or(DEFAULT_OFFSET).try_into()?,
+            limit.unwrap_or(DEFAULT_LIMIT).try_into()?,
+        )?;
+        Ok(GraphedNamedAPIResourceList::from(objects))
+    }
+
+    #[graphql(description = "Retrieve a list of pokemons")]
+    fn pokemons(
+        context: &Context,
+        offset: Option<i32>,
+        limit: Option<i32>,
+    ) -> FieldResult<GraphedNamedAPIResourceList> {
+        let objects = Pokemon::list(
+            offset.unwrap_or(DEFAULT_OFFSET).try_into()?,
+            limit.unwrap_or(DEFAULT_LIMIT).try_into()?,
+        )?;
+        Ok(GraphedNamedAPIResourceList::from(objects))
+    }
+
+    #[graphql(description = "Retrieve a list of pokemon forms")]
+    fn pokemon_forms(
+        context: &Context,
+        offset: Option<i32>,
+        limit: Option<i32>,
+    ) -> FieldResult<GraphedNamedAPIResourceList> {
+        let objects = PokemonForm::list(
+            offset.unwrap_or(DEFAULT_OFFSET).try_into()?,
+            limit.unwrap_or(DEFAULT_LIMIT).try_into()?,
+        )?;
+        Ok(GraphedNamedAPIResourceList::from(objects))
     }
 
     #[graphql(description = "Retrieve a berry information by its name")]
     fn berry_by_name(context: &Context, name: String) -> FieldResult<GraphedBerry> {
-        let berry = pokerust::Berry::from_name(&name)?;
-
-        // TODO: flavor map, resource list
-        // move to other function
+        let berry = Berry::from_name(&name)?;
         Ok(GraphedBerry::from(berry))
     }
 
     #[graphql(description = "Retrieve a berry information by its id")]
     fn berry_by_id(context: &Context, id: String) -> FieldResult<GraphedBerry> {
-        let berry = pokerust::Berry::from_id(id.parse()?)?;
+        let berry = Berry::from_id(id.parse()?)?;
         Ok(GraphedBerry::from(berry))
     }
 
-    // #[graphql(description = "Retrieve a berry information by its id")]
-    // fn list(context: &Context, next: String, offset: String) -> FieldResult<GraphedBerry> {
-    //     let items = pokerust::Item::list(5, 20)?;
-    //     Ok(items)
-    // }
-}
+    #[graphql(description = "Retrieve a pokemon information by its name")]
+    fn pokemon_by_name(context: &Context, name: String) -> FieldResult<GraphedPokemon> {
+        let obj = Pokemon::from_name(&name)?;
+        Ok(GraphedPokemon::from(obj))
+    }
 
-pub struct MutationRoot;
+    #[graphql(description = "Retrieve a pokemon information by its name")]
+    fn pokemon_by_id(context: &Context, id: String) -> FieldResult<GraphedPokemon> {
+        let obj = Pokemon::from_id(id.parse()?)?;
+        Ok(GraphedPokemon::from(obj))
+    }
 
-#[graphql_object(
-    context = Context,
-)]
-impl MutationRoot {
-    fn apiVersion() -> &str {
-        "1.0"
+    #[graphql(description = "Retrieve a pokemon form by its name")]
+    fn pokemon_form_by_name(context: &Context, name: String) -> FieldResult<GraphedPokemonForm> {
+        let obj = PokemonForm::from_name(&name)?;
+        Ok(GraphedPokemonForm::from(obj))
+    }
+
+    #[graphql(description = "Retrieve a pokemon form by its name")]
+    fn pokemon_form_by_id(context: &Context, id: String) -> FieldResult<GraphedPokemonForm> {
+        let obj = PokemonForm::from_id(id.parse()?)?;
+        Ok(GraphedPokemonForm::from(obj))
+    }
+
+    #[graphql(description = "Retrieve a pokemon species by its name")]
+    fn pokemon_species_by_name(
+        context: &Context,
+        name: String,
+    ) -> FieldResult<GraphedPokemonSpecies> {
+        let obj = PokemonSpecies::from_name(&name)?;
+        Ok(GraphedPokemonSpecies::from(obj))
+    }
+
+    #[graphql(description = "Retrieve a pokemon species by its id")]
+    fn pokemon_species_by_id(_context: &Context, id: String) -> FieldResult<GraphedPokemonSpecies> {
+        let obj = PokemonSpecies::from_id(id.parse()?)?;
+        Ok(GraphedPokemonSpecies::from(obj))
     }
 }
 
-pub type Schema = juniper::RootNode<'static, QueryRoot, MutationRoot, EmptySubscription<Context>>;
+// pub struct MutationRoot;
 
-// pub type Schema = RootNode<'static, QueryRoot, MutationRoot>;
+// #[graphql_object(
+//     context = Cowntext,
+// )]
+// impl MutationRoot {
+//     fn apiVersion() -> &str {
+//         VERSION
+//     }
+// }
+
+pub type Schema =
+    juniper::RootNode<'static, QueryRoot, EmptyMutation<Context>, EmptySubscription<Context>>;
 
 pub fn create_schema() -> Schema {
-    Schema::new(QueryRoot, MutationRoot, EmptySubscription::new())
+    Schema::new(QueryRoot, EmptyMutation::new(), EmptySubscription::new())
 }

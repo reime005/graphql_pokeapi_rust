@@ -4,7 +4,7 @@ use juniper::{
 };
 
 // #[derive(GraphQLObject)]
-// #[graphql(description = "A humanoid creature in the Star Wars universe")]
+// #[graphql(description = "TODO")]
 // pub struct GraphedName {
 //   pub name: String,
 //   pub url: String,
