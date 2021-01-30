@@ -627,6 +627,29 @@ impl From<PokemonSpecies> for GraphedPokemonSpecies {
     }
 }
 
+impl From<Characteristic> for GraphedCharacteristic {
+    fn from(obj: Characteristic) -> Self {
+        GraphedCharacteristic {
+            gene_modulo: obj.gene_modulo.to_string(),
+            id: obj.id.to_string(),
+            possible_values: obj.possible_values.iter().map(|s| s.to_string()).collect(),
+            descriptions: conv_vector(&obj.descriptions),
+            highest_stat: GraphedNamedAPIResource::from(&obj.highest_stat),
+        }
+    }
+}
+
+impl From<EggGroup> for GraphedEggGroup {
+    fn from(obj: EggGroup) -> Self {
+        GraphedEggGroup {
+            id: obj.id.to_string(),
+            name: obj.name,
+            names: conv_vector(&obj.names),
+            pokemon_species: conv_vector(&obj.pokemon_species),
+        }
+    }
+}
+
 impl From<PokemonHeldItemVersion> for GraphedPokemonHeldItemVersion {
     fn from(obj: PokemonHeldItemVersion) -> Self {
         GraphedPokemonHeldItemVersion {

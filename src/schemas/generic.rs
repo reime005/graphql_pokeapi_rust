@@ -168,7 +168,7 @@ impl<T> From<NamedAPIResource<T>> for GraphedNamedAPIResource {
     fn from(name: NamedAPIResource<T>) -> Self {
         GraphedNamedAPIResource {
             name: name.name,
-            url: name.url
+            url: name.url,
         }
     }
 }

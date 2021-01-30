@@ -1,6 +1,6 @@
 use juniper::{
-  graphql_interface, graphql_object, EmptySubscription, FieldResult, GraphQLEnum,
-  GraphQLInputObject, GraphQLObject, ScalarValue,
+    graphql_interface, graphql_object, EmptySubscription, FieldResult, GraphQLEnum,
+    GraphQLInputObject, GraphQLObject, ScalarValue,
 };
 
 // #[derive(GraphQLObject)]
