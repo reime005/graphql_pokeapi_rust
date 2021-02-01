@@ -59,6 +59,6 @@ Would yield the following result:
 
 The positive aspects, compared to a REST API, are:
 
-  - only receiving the specified, necessary fields
-  - possibility of querying multiple different things (like pokemon and berries) in one request, so that the end user just needs to to one request instead of two
-  - self-describing API that makes it easier to explore
+- only receiving the specified, necessary fields
+- possibility of querying multiple different things (like pokemon and berries) in one request, so that the end user just needs to to one request instead of two
+- self-describing API that makes it easier to explore
