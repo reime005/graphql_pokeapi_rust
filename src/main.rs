@@ -4,8 +4,9 @@ use pokerust::{Berry, FromId};
 extern crate juniper;
 extern crate serde_json;
 
+use actix_cors::Cors;
 use actix_ratelimit::{MemoryStore, MemoryStoreActor, RateLimiter};
-use actix_web::{middleware, web, App, HttpServer};
+use actix_web::{middleware, http, web, App, HttpServer};
 use std::time::Duration;
 
 use crate::handlers::setup;
@@ -24,6 +25,13 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         let store = MemoryStore::new();
 
+        let cors = Cors::default()
+              .allowed_origin("*")
+              .allowed_methods(vec!["POST"])
+              .allowed_headers(vec![http::header::ACCEPT])
+              .allowed_header(http::header::CONTENT_TYPE)
+              .max_age(3600);
+
         App::new()
             .wrap(
                 RateLimiter::new(MemoryStoreActor::from(store.clone()).start())
@@ -31,6 +39,7 @@ async fn main() -> std::io::Result<()> {
                     .with_max_requests(100),
             )
             .wrap(middleware::Logger::default())
+            .wrap(cors)
             .configure(setup)
             .default_service(web::to(|| async { "404" }))
     })
