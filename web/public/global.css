@@ -1,5 +1,6 @@
 :root {
   --red: #932923;
+  --grey: #919191;
   --darkred: #3a1114;
   --yellow: #f0e370;
   --gradient_green: linear-gradient(#5b7247be, #87a96b, #5b7247c9, #536842ec);
@@ -59,8 +60,12 @@ a {
   text-decoration: none;
 }
 
+.capitalize {
+  text-transform: capitalize;
+}
+
 a:hover {
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 a:visited {
