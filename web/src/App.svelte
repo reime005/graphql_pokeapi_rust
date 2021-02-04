@@ -6,8 +6,8 @@
   import Data from "./Data.svelte";
 
   initClient({
-    // url: "https://graphql-pokeapi.herokuapp.com/graphql",
-    url: "http://localhost:8080/graphql",
+    url: "https://graphql-pokeapi.herokuapp.com/graphql",
+    // url: "http://localhost:8080/graphql",
   });
 
   const qres = operationStore(
