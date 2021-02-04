@@ -1,6 +1,8 @@
 <script lang="ts">
   import { operationStore, query } from "@urql/svelte";
+  import Loader from "./Loader.svelte";
 
+  let name = "";
   let limit = 20;
   let offset = 0;
 
@@ -25,14 +27,6 @@
       pokeType = qres.data.pokemonByName.types[0].type.name;
     }
   }
-
-  const showList = () => {
-    $qres.variables.name = "";
-  };
-
-  const changeName = (val: string) => {
-    $qres.variables.name = val;
-  };
 
   const qres = operationStore(
     `
@@ -70,7 +64,13 @@
     { requestPolicy: "cache-and-network" }
   );
 
-  // $: alert(name)
+  const showList = () => {
+    $qres.variables.name = "";
+  };
+
+  const changeName = (val: string) => {
+    $qres.variables.name = val;
+  };
 
   query(qres);
   query(pokemons);
@@ -102,7 +102,7 @@
       </div>
       <div id="picture">
         {#if $pokemons.fetching || $pokemons.error}
-          <div>loading</div>
+          <Loader />
         {:else if $qres.variables.name.length === 0}
           <ul>
             {#each $pokemons.data.pokemons.results as pk (pk.name)}
@@ -111,13 +111,15 @@
               </li>
             {/each}
           </ul>
-        {:else if $qres.fetching || $qres.error}
-          <div />
+        {:else if $qres.fetching}
+          <Loader />
+        {:else if $qres.error}
+          <p>Please try again.</p>
         {:else}
           <img
             src={$qres.data.pokemonByName.sprites.versions.generationI.redBlue
               .frontDefault}
-            alt={name}
+            alt={"pokemon image"}
             height="170"
           />
         {/if}
@@ -153,7 +155,13 @@
   </div>
   <div id="right">
     <div id="stats">
-      {#if $qres.fetching || $qres.error}<p>todo</p>{:else}
+      {#if $qres.variables.name.length === 0}
+        <p>Please select a Pokemon.</p>
+      {:else if $qres.fetching}
+        <Loader />
+      {:else if $qres.error}
+        <p>Please try again.</p>
+      {:else}
         <strong>Name:</strong>
         <span class="capitalize">{qres.data.pokemonByName.name}</span><br />
         <strong>ID:</strong>
