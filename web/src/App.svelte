@@ -28,7 +28,7 @@
   {:else}
     <div class="container">
       <div class="fullWrap">
-        <Pokedex name="pikachu" />
+        <Pokedex />
       </div>
 
       <a

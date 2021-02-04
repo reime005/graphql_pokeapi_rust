@@ -1,7 +1,38 @@
 <script lang="ts">
   import { operationStore, query } from "@urql/svelte";
 
-  export let name = "bulbasaur";
+  let limit = 20;
+  let offset = 0;
+
+  const pokemons = operationStore(
+    `
+    query($limit: Int!, $offset: Int!) {
+      pokemons(limit: $limit, offset: $offset) {
+        results {
+          name
+        }
+      }
+    }
+  `,
+    { limit, offset },
+    { requestPolicy: "cache-and-network" }
+  );
+
+  let pokeType: string = "";
+
+  $: {
+    if ($qres.data) {
+      pokeType = qres.data.pokemonByName.types[0].type.name;
+    }
+  }
+
+  const showList = () => {
+    $qres.variables.name = "";
+  };
+
+  const changeName = (val: string) => {
+    $qres.variables.name = val;
+  };
 
   const qres = operationStore(
     `
@@ -35,46 +66,14 @@
       }
     }
   `,
-    { name }
+    { name },
+    { requestPolicy: "cache-and-network" }
   );
 
-  let limit = 0;
-  let offset = 0;
-
-  const pokemons = operationStore(
-    `
-    query($limit: Int!, $offset: Int!) {
-      defaultOffset
-      defaultLimit
-      pokemons(limit: $limit, offset: $offset) {
-        results {
-          name
-        }
-      }
-    }
-  `,
-    { limit, offset }
-  );
-
-  // $: {
-  //   if ($pokemons.data) {
-  //     limit =
-  //   }
-  // }
-
-  let pokeType: string = "";
-
-  $: {
-    if ($qres.data) {
-      pokeType = qres.data.pokemonByName.types[0].type.name;
-    }
-  }
-
-  const showList = () => {
-    name = "";
-  };
+  // $: alert(name)
 
   query(qres);
+  query(pokemons);
 </script>
 
 <div id="pokedex">
@@ -102,12 +101,18 @@
         <div id="buttontopPicture2" />
       </div>
       <div id="picture">
-        {#if $qres.fetching || $qres.error}
-          <img
-            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/200653/psykokwak.gif"
-            alt={name}
-            height="170"
-          />
+        {#if $pokemons.fetching || $pokemons.error}
+          <div>loading</div>
+        {:else if $qres.variables.name.length === 0}
+          <ul>
+            {#each $pokemons.data.pokemons.results as pk (pk.name)}
+              <li on:click={() => changeName(pk.name)}>
+                {pk.name}
+              </li>
+            {/each}
+          </ul>
+        {:else if $qres.fetching || $qres.error}
+          <div />
         {:else}
           <img
             src={$qres.data.pokemonByName.sprites.versions.generationI.redBlue
@@ -191,6 +196,18 @@
   * {
     margin: 0;
     padding: 0;
+  }
+
+  ul {
+    max-height: 100%;
+    overflow-y: scroll;
+    padding: 0.5em;
+    list-style: none;
+  }
+
+  li {
+    margin-bottom: 0.5em;
+    cursor: pointer;
   }
 
   @media all {
@@ -533,6 +550,7 @@
       width: 75px;
       height: 25px;
       margin-right: 20px;
+      cursor: pointer;
     }
 
     div.sp {
