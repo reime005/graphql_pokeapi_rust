@@ -50,6 +50,11 @@
 <style>
   main {
     overflow-y: scroll;
+    width: 100%;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 
   footer {
@@ -88,12 +93,5 @@
     text-transform: uppercase;
     font-size: 4em;
     font-weight: 100;
-  }
-
-  @media (min-width: 640px) {
-    main {
-      background-color: var(--red);
-      max-width: var(--mobileBreak);
-    }
   }
 </style>

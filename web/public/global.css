@@ -21,10 +21,14 @@
   background-color: transparent;
 }
 
+html,
 body {
   position: relative;
   width: 100%;
   height: 100%;
+}
+
+main {
   background: var(--gradient_bg);
 }
 
