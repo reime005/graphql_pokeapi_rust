@@ -3,7 +3,6 @@
 
   import { initClient } from "@urql/svelte";
   import { operationStore, query } from "@urql/svelte";
-  import Data from "./Data.svelte";
 
   initClient({
     url: "https://graphql-pokeapi.herokuapp.com/graphql",
@@ -31,26 +30,34 @@
         <Pokedex />
       </div>
 
-      <a
-        aria-label="Credits"
-        class="version"
-        href="https://codepen.io/Bidji/pen/MYdPwo">Credits</a
-      >
-      <a
-        aria-label="Source Code on Github"
-        class="version"
-        href="https://github.com/reime005/graphql_pokeapi_rust"
-        >Code on Github (v{qres.data.apiVersion})</a
-      >
+      <footer>
+        <a
+          aria-label="Credits"
+          class="version"
+          href="https://codepen.io/Bidji/pen/MYdPwo">Credits</a
+        >
+        <a
+          aria-label="Source Code on Github"
+          class="version"
+          href="https://github.com/reime005/graphql_pokeapi_rust"
+          >Code on Github (v{qres.data.apiVersion})</a
+        >
+      </footer>
     </div>
   {/if}
 </main>
 
 <style>
   main {
-    height: 100vh;
-    max-height: 100vh;
-    overflow: hidden;
+    overflow-y: scroll;
+  }
+
+  footer {
+    margin-top: 2em;
+    display: flex;
+    justify-content: space-between;
+    padding: 1vw;
+    width: 100%;
   }
 
   .container {

@@ -78,7 +78,7 @@
 
 <div id="pokedex">
   <div id="left">
-    <div id="logo" />
+    <!-- <div id="logo" /> -->
     <div id="bg_curve1_left" />
     <div id="bg_curve2_left" />
     <div id="curve1_left">
@@ -218,10 +218,15 @@
     cursor: pointer;
   }
 
+  div#pokedex {
+    margin: 0;
+  }
+
   @media all {
     div#pokedex {
       width: 750px;
       margin: 50px auto 0 auto;
+      max-width: 100%;
     }
 
     div#left {
@@ -1181,7 +1186,7 @@
     div#barbutton1,
     div#barbutton2,
     div#cross {
-      display: none;
+      display: block;
     }
   }
 </style>
