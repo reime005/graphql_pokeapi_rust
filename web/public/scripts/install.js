@@ -51,5 +51,5 @@ window.addEventListener("appinstalled", logAppInstalled);
  */
 function logAppInstalled(evt) {
   // Add code to log the event
-  console.log("Svelte App was installed.", evt);
+  console.log("PokeDex App was installed.", evt);
 }

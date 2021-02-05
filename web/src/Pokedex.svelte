@@ -3,7 +3,7 @@
   import Loader from "./Loader.svelte";
 
   let name = "";
-  let limit = 20;
+  let limit = 200;
   let offset = 0;
 
   const pokemons = operationStore(
