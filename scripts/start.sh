@@ -1,5 +1,5 @@
-#!/bin/sh
+#!/bin/bash
 
 make serve &
 
-exec poke &
+poke
