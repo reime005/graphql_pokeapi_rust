@@ -24,6 +24,6 @@ RUN make serve &
 
 RUN echo "from data.v2.build import build_all; build_all()" | python manage.py shell --settings=config.local
 
-RUN chmod 777 /usr/src/rust_webserver_test/scripts/run.sh
+RUN chmod 777 /usr/src/rust_webserver_test/scripts/start.sh
 
-CMD ["/usr/src/rust_webserver_test/scripts/run.sh"]
+CMD ["/usr/src/rust_webserver_test/scripts/start.sh"]
