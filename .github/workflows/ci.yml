@@ -8,8 +8,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-        # with:
-        #   submodules: 'recursive'
+        with:
+          submodules: 'recursive'
 
       - uses: actions-rs/toolchain@v1
         with:
@@ -34,18 +34,14 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }} # needed to post all lints as annotations for the pushed commit
           args: --all-features
 
-      # - name: Build pokeapi
-      #   working-directory: pokeapi
-      #   run: |
-      #     docker-compose up -d
-      #     docker-compose exec -T app python manage.py migrate --settings=config.docker-compose
-      #     docker-compose exec -T app sh -c 'echo "from data.v2.build import build_all; build_all()" | python manage.py shell --settings=config.docker-compose'
-      #     docker-compose down
+      - name: test Build pokeapi
+        run: |
+          docker build -t poke:latest .
 
-      - uses: akhileshns/heroku-deploy@v3.5.7
-        if: github.ref == 'refs/heads/master'
-        with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: graphql-pokeapi
-          heroku_email: ${{secrets.HEROKU_EMAIL}}
-          usedocker: true
+      # - uses: akhileshns/heroku-deploy@v3.5.7
+      #   if: github.ref == 'refs/heads/master'
+      #   with:
+      #     heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+      #     heroku_app_name: graphql-pokeapi
+      #     heroku_email: ${{secrets.HEROKU_EMAIL}}
+      #     usedocker: true
