@@ -34,14 +34,10 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }} # needed to post all lints as annotations for the pushed commit
           args: --all-features
 
-      - name: test Build pokeapi
-        run: |
-          docker build -t poke:latest .
-
-      # - uses: akhileshns/heroku-deploy@v3.5.7
-      #   if: github.ref == 'refs/heads/master'
-      #   with:
-      #     heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-      #     heroku_app_name: graphql-pokeapi
-      #     heroku_email: ${{secrets.HEROKU_EMAIL}}
-      #     usedocker: true
+      - uses: akhileshns/heroku-deploy@v3.5.7
+        if: github.ref == 'refs/heads/master'
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: graphql-pokeapi
+          heroku_email: ${{secrets.HEROKU_EMAIL}}
+          usedocker: true
