@@ -5,8 +5,8 @@
   import { operationStore, query } from "@urql/svelte";
 
   initClient({
-    // url: "https://graphql-pokeapi.herokuapp.com/graphql",
-    url: "http://localhost/graphql",
+    url: "https://graphql-pokeapi.herokuapp.com/graphql",
+    // url: "http://localhost/graphql",
   });
 
   const qres = operationStore(
