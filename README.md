@@ -4,9 +4,11 @@ This project is still experimental / WIP
 
 Unofficial GraphQL API for the [PokeAPI](https://pokeapi.co).
 
-Endpoint is https://graphql-pokeapi.herokuapp.com/graphql
+Endpoint is https://graphql-pokeapi.herokuapp.com/graphql.
 
-GraphiQL Endpoint is https://graphql-pokeapi.herokuapp.com/graphiql (pointing to https://pokeapi.co/api/v2/)
+Svelte PokeDex UI is [https://graphql-pokeapi-rust.reime005.vercel.app](https://graphql-pokeapi-rust.reime005.vercel.app).
+
+GraphiQL Endpoint is https://graphql-pokeapi.herokuapp.com/graphiql (pointing to a local instance of https://pokeapi.co/api/v2/).
 
 ## Local Setup
 
